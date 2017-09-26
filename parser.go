@@ -16,7 +16,7 @@ type Parser struct {
 // The regular expression checks if the URL is valid, and at the same time extracts the sub-domain, domain, uri and variables
 func NewParser() *Parser  {
 	parser := new(Parser)
-	parser.ValidUrlRegEx, _ = regexp.Compile(`^(?:(?:https?:)?(?://)?(?:([\w]+\.))*((?:\w+)\.[a-zA-Z]{2,11}))?((?:/[\w-_.+]*)+)?(#[\w]+|\?(?:\w+=\w+&?)+)?$`)
+	parser.ValidUrlRegEx, _ = regexp.Compile(`^(?:(?:https?:)?(?://)?((?:[\w]+\.)*)((?:\w+)\.[a-zA-Z]{2,11})+)?((?:/[\w-_.+]*)+)?(#[\w]+|\?(?:\w+=\w+&?)+)?$`)
 	parser.ExtRegEx, _ = regexp.Compile(`\.([a-z]{2,4})$`)
 	parser.Tags = map[string]string{
 		"a": "href",
@@ -73,12 +73,12 @@ func (parser *Parser) ParseBody(rootURL string, body io.ReadCloser) (map[string]
 						if tag.Data == "a" {
 							if hasExt, ext := parsedURL.URIHasExtension(parser.ExtRegEx); hasExt {
 								if parser.Extensions[ext] {
-									if parsedURL.IsSameDomain() && !parsedURL.IsSubDomain() {
+									if parsedURL.IsSameDomain() {
 										links[parsedURL.GetURL()] = parsedURL
 									}
 								}
 							}else{
-								if parsedURL.IsSameDomain() && !parsedURL.IsSubDomain() {
+								if parsedURL.IsSameDomain() {
 									links[parsedURL.GetURL()] = parsedURL
 								}
 							}

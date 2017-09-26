@@ -31,7 +31,7 @@ func NewParsedURL(rootUrl string, url string, urlRegExp *regexp.Regexp) *ParsedU
 }
 
 func (parsedURL *ParsedURL) IsSameDomain() bool  {
-	return parsedURL.Domain == parsedURL.RootUrl || parsedURL.Domain == ""
+	return parsedURL.SubDomain + parsedURL.Domain == parsedURL.RootUrl || parsedURL.Domain == ""
 }
 
 func (parsedURL *ParsedURL) IsSubDomain() bool  {

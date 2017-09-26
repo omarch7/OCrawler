@@ -9,7 +9,7 @@ import (
 )
 
 func isValidUrlFormat(url string) bool {
-	r, _ := regexp.Compile(`^([\w]+)\.?([\w])+\.[a-zA-Z]{2,11}$`)
+	r, _ := regexp.Compile(`^([\w]+)\.?([\w])+(\.[a-zA-Z]{2,11})+$`)
 	log.Printf("Checking %s", url)
 	return r.MatchString(url)
 }

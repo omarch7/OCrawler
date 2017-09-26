@@ -55,10 +55,12 @@ func (crawler *Crawler) Crawl(uri string, depth int) {
 	}
 	depth += 1
 	for _, parsedLink := range links {
-		crawler.Site.AddLink(uri, parsedLink.URI, depth)
-		if !crawler.Site.HasBeenVisited(parsedLink.URI) && depth <= crawler.MaxDepth {
-			crawler.wg.Add(1)
-			go crawler.Crawl(parsedLink.URI, depth)
+		if parsedLink.URI != "" {
+			crawler.Site.AddLink(uri, parsedLink.URI, depth)
+			if !crawler.Site.HasBeenVisited(parsedLink.URI) && depth <= crawler.MaxDepth {
+				crawler.wg.Add(1)
+				go crawler.Crawl(parsedLink.URI, depth)
+			}
 		}
 	}
 }

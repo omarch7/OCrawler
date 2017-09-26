@@ -42,7 +42,7 @@ func NewSiteMap(rootURL string) *SiteMap {
 // This data structure implements the sync/mux object to control the locking and unlocking of processes
 // this allow us to ensure the concurrent execution of the algorithm while using the data structure
 func (siteMap *SiteMap) AddDocument(uri string, depth int) {
-	if !siteMap.documentExists(uri) {
+	if !siteMap.documentExists(uri)  {
 		siteMap.mux.Lock()
 		siteMap.Documents[uri] = NewDocument(uri, depth)
 		siteMap.mux.Unlock()
