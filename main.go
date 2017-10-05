@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"runtime"
+	"time"
 )
 
 func isValidUrlFormat(url string) bool {
@@ -34,6 +35,6 @@ func main()  {
 	crawler := NewCrawler(args[0], depth)
 
 	crawler.Begin()
-
+	time.Sleep(1 * time.Second)
 	crawler.PrintSiteMap()
 }

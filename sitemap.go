@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"github.com/beego/bee/logger/colors"
+	"sort"
 )
 
 type Document struct {
@@ -89,8 +90,9 @@ func (siteMap *SiteMap) HasBeenVisited(uri string) bool  {
 }
 
 const edge string = "│   "
-const space string = "\t"
+const space string = "  "
 const node string = "├── "
+const lastNode string = "└── "
 
 func (siteMap *SiteMap) PrintSiteMap()  {
 	fmt.Println(colors.CyanBold(fmt.Sprintf("\n%s Site Map %s", strings.Repeat("*", 45),
@@ -101,6 +103,12 @@ func (siteMap *SiteMap) PrintSiteMap()  {
 
 // To print, a tree is implemented, lower levels are called recursively
 func PrintDocuments(document *Document) {
+	sort.Slice(document.Links, func(i, j int) bool {
+		return document.Links[i].URI < document.Links[j].URI
+	})
+	sort.Slice(document.Assets, func(i, j int) bool {
+		return document.Assets[i] < document.Assets[j]
+	})
 	for _, link := range document.Links {
 		PrintSpaces(document.Depth)
 		fmt.Print(colors.White(node))
@@ -111,15 +119,22 @@ func PrintDocuments(document *Document) {
 			fmt.Println(colors.Magenta(link.URI))
 		}
 	}
-	for _, asset := range document.Assets {
+	for i, asset := range document.Assets {
 		PrintSpaces(document.Depth)
-		fmt.Printf("%s%s\n", colors.White(node), colors.Green(asset))
+		if i < len(document.Assets) - 1 {
+			fmt.Print(colors.White(node))
+		} else {
+			fmt.Print(colors.White(lastNode))
+		}
+		fmt.Println(colors.Green(asset))
 	}
 }
 
 func PrintSpaces(depth int)  {
 	if depth > 0 {
-		spaces := strings.Repeat(space, depth)
-		fmt.Printf("%s%s", colors.White(edge), spaces)
+		for i := 0; i < depth; i++ {
+			spaces := strings.Repeat(space, i)
+			fmt.Printf("%s%s", colors.White(edge), spaces)
+		}
 	}
 }

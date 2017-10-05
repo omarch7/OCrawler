@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"sync"
 	"log"
+	"time"
 )
 
 type Crawler struct {
@@ -39,7 +40,11 @@ func (crawler *Crawler) Crawl(uri string, depth int) {
 	defer crawler.wg.Done()
 	domain := crawler.Domain
 	log.Printf("Depth: %v - %s%s Crawling...", depth, domain, uri)
-	resp, err := http.Get("http://" + domain + uri)
+	timeout := time.Duration(5 * time.Second)
+	client := http.Client{
+		Timeout: timeout,
+	}
+	resp, err := client.Get("http://" + domain + uri)
 	if err != nil {
 		log.Printf("Couldn't get %s%s", domain, uri)
 		return
